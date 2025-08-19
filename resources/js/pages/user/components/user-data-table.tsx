@@ -4,9 +4,11 @@ import {
     getCoreRowModel,
     getFilteredRowModel,
     getSortedRowModel,
+    HeaderContext,
     Row,
     useReactTable
 } from "@tanstack/react-table";
+import { HiMiniAdjustmentsVertical } from "react-icons/hi2";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { router } from "@inertiajs/react";
@@ -87,6 +89,26 @@ export default function UserDataTable<TData, TValue>({
             </div>
 
             <div className="overflow-hidden rounded-md border">
+                <div className="flex justify-end m-1 mb-2">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button className="cursor-pointer p-0 m-1">
+                                    <HiMiniAdjustmentsVertical size={40} />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                {table.getAllLeafColumns().map((column) => (
+                                    <DropdownMenuCheckboxItem
+                                        key={column.id}
+                                        checked={column.getIsVisible()}
+                                        onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                                    >
+                                        {flexRender(column.columnDef.header, { column, table } as HeaderContext<TData, unknown>)}
+                                    </DropdownMenuCheckboxItem>
+                                ))}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                </div>
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -113,23 +135,6 @@ export default function UserDataTable<TData, TValue>({
                                 })}
                             </TableRow>
                         ))}
-
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button>Column</Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                                {table.getAllLeafColumns().map((column) => (
-                                    <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        checked={column.getIsVisible()}
-                                        onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                                    >
-                                        {column.id}
-                                    </DropdownMenuCheckboxItem>
-                                ))}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
                     </TableHeader>
                     <TableBody>
                         {table.getRowModel().rows?.length ? (

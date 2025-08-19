@@ -9,6 +9,7 @@ export default class User extends BaseEntity<UserModel> implements UserModel {
     public email!: string;
     public description!: string;
     public address!: string;
+    public gender!: string;
     public created_at!: string;
     public created_by!: string;
     public updated_at!: string;
@@ -44,5 +45,10 @@ export default class User extends BaseEntity<UserModel> implements UserModel {
     setAddress(address: string): void
     {
         this.address = address;
+    }
+
+    setGender(gender: string): void
+    {
+        this.gender = gender;
     }
 }

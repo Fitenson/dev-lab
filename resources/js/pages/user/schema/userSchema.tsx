@@ -26,6 +26,10 @@ export const userSchema = z.object({
     address: z.string().max(255, {
         error: addressMaxError
     }).optional(),
+
+    gender: z.string().max(50, {
+        error: "Gender cannot exceed 50 characters"
+    }).optional()
 });
 
 

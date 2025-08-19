@@ -5,7 +5,7 @@ namespace App\Modules\User\Presentation\Request;
 use App\Core\Request\BaseRequest;
 
 
-class CreateUserRequest extends BaseRequest {
+class UpdateUserRequest extends BaseRequest {
     protected string $name = 'user';
 
 
@@ -14,7 +14,7 @@ class CreateUserRequest extends BaseRequest {
         return [
             'name' => 'required|string|max:100',
             'full_name' => 'nullable|string|max:100',
-            'email' => 'required|email|unique:users,email|max:100',
+            'email' => 'nullable|email|max:100',
             'gender' => 'nullable|string|max:50',
             'description' => 'nullable|string|max:500',
             'address' => 'nullable|string|max:500',
@@ -30,7 +30,6 @@ class CreateUserRequest extends BaseRequest {
 
             'full_name.max' => ErrorMessage::FULL_NAME_MAX,
 
-            'email.required' => ErrorMessage::EMAIL_REQUIRED,
             'email.email' => ErrorMessage::EMAIL_FORMAT,
             'email.unique' => ErrorMessage::EMAIL_UNIQUE,
             'email.max' => ErrorMessage::EMAIL_MAX,

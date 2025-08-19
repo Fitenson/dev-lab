@@ -5,7 +5,7 @@ namespace App\Modules\User\Domain\UseCase;
 use App\Modules\User\Domain\Repository\UserRepository;
 
 
-class CreateUserUseCase {
+class UpdateUserUseCase {
     private UserRepository $user_repository;
 
     public function __construct(UserRepository $user_repository)
@@ -14,8 +14,8 @@ class CreateUserUseCase {
     }
 
 
-    public function handle(array $data)
+    public function handle(string $id, array $data)
     {
-        return $this->user_repository->store($data);
+        return $this->user_repository->update($id, $data);
     }
 }

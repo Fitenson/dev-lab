@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
 use App\Modules\User\Domain\Service\UserService;
-use Inertia\Inertia;
+use App\Modules\User\Presentation\Request\CreateUserRequest;
+use App\Modules\User\Presentation\Request\UpdateUserRequest;
 
 
 class UserController extends Controller {
@@ -18,13 +19,22 @@ class UserController extends Controller {
     }
 
 
-    public function index(Request $request) {
-        return Inertia::render('user/index');
-    }
-
-
     public function getIndex(Request $request) {
         $users = $this->user_service->index($request);
         return response()->json($users);
+    }
+
+
+    public function store(CreateUserRequest $create_user_request) {
+        $user = $this->user_service->store($create_user_request->validated());
+
+        return redirect()->route('user.show', $user->id);
+    }
+
+
+    public function update(string $id, UpdateUserRequest $update_user_request) {
+        $user = $this->user_service->update($id, $update_user_request->validated());
+
+        return redirect()->route('user.show', $user->id);
     }
 }
