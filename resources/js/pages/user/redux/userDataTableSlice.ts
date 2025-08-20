@@ -4,7 +4,7 @@ import { RowSelectionState, SortingState, VisibilityState } from "@tanstack/reac
 import { UserModel } from "../schema/userSchema";
 
 
-interface UserDataTableState {
+export interface UserDataTableState {
     columnVisibility: VisibilityState;
     rowSelection: RowSelectionState;
     sorting: SortingState;

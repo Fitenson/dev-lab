@@ -7,7 +7,7 @@ import breadcrumbItems from "@/components/breadcrumb-items";
 import AppLayout from "@/layouts/app-layout";
 import UserLayout from "@/layouts/user/layout";
 
-import User from "./data/User";
+import User from "@/pages/user/data/models/User";
 import { UserModel, userSchema } from "./schema/userSchema";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { FormMessage } from "@/components/ui/form";
@@ -93,10 +93,9 @@ export default function UserFormView({ userData }: Props) {
                 <Form {...userForm}>
                     <form className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full items-start" onSubmit={userForm.handleSubmit(submit)}>
                         <TopActionBar
-                            showSave
-                            showDelete
-                            showBrowse
-                            browseTo="/user"
+                            saveAction={{}}
+                            browseAction={{ to: "/user" }}
+                            deleteAction={{ action: () => {} }}
                         />
 
                         <FormField

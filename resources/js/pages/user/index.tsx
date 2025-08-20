@@ -13,19 +13,19 @@ import { useAppSelector } from "@/core/presentation/store/useAppSelector";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setIndexData } from "./redux/userDataTableSlice";
-import { useRequest } from "@/lib/useRequest";
+import useUserService from "./service/useUserService";
 
 
 export default function UserGridview() {
     const dispatch = useDispatch();
     const { params } = useAppSelector(state => state.userDataTable);
-    const { request } = useRequest();
+    const { getIndexUser } = useUserService();
+
 
     const { data } = useQuery({
         queryKey: ["/user/index", params],
         queryFn: async () => {
-            const response = await request.post("/user/index", params);
-            return response.data;
+            return getIndexUser(params);
         },
         enabled: true,
     });

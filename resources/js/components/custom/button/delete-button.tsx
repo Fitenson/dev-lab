@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 
 type DeleteButtonProps = {
-    onDelete: () => void;
+    onDelete?: () => void;
     disabled?: boolean;
 };
 

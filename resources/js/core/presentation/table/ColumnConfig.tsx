@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
+
 
 type ColumnConfig<TData> = {
     accessorKey: keyof TData,
@@ -21,7 +21,6 @@ const createColumn = <TData,> ({
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
             {header ?? String(accessorKey)}
-            <ArrowUpDown size={20} />
         </Button>
     )
 });

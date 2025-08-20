@@ -4,15 +4,13 @@ import {
     getCoreRowModel,
     getFilteredRowModel,
     getSortedRowModel,
-    HeaderContext,
     Row,
     useReactTable
 } from "@tanstack/react-table";
-import { HiMiniAdjustmentsVertical } from "react-icons/hi2";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { router } from "@inertiajs/react";
-import User from "../data/User";
+import User from "@/pages/user/data/models/User";
 import { UserModel } from "./../schema/userSchema";
 import TopActionBar from "@/components/custom/top-action-bar";
 import { Input } from "@/components/ui/input";
@@ -20,8 +18,6 @@ import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/core/presentation/store/useAppSelector";
 import { RootState } from "@/core/presentation/store";
 import { setColumnVisibility, setRowSelection, setSorting } from "../redux/userDataTableSlice";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 
 
 interface DataTableProps<TData, TValue> {
@@ -78,36 +74,14 @@ export default function UserDataTable<TData, TValue>({
 
     return (
         <main className="w-full">
-            <div className="flex items-center justify-between mb-4">
-                <div className="flex gap-2">
-                    <TopActionBar
-                        showCreate
-                        createTo="/user/create"
-                        showDelete
-                    />
-                </div>
-            </div>
-
             <div className="overflow-hidden rounded-md border">
-                <div className="flex justify-end m-1 mb-2">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button className="cursor-pointer p-0 m-1">
-                                    <HiMiniAdjustmentsVertical size={40} />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                                {table.getAllLeafColumns().map((column) => (
-                                    <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        checked={column.getIsVisible()}
-                                        onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                                    >
-                                        {flexRender(column.columnDef.header, { column, table } as HeaderContext<TData, unknown>)}
-                                    </DropdownMenuCheckboxItem>
-                                ))}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                <div className="w-full">
+                    <TopActionBar
+                        createAction={{ to: "/user/create" }}
+                        deleteAction={{ action: () => {} }}
+                        refreshAction={{ action: () => {} }}
+                        table={table}
+                    />
                 </div>
                 <Table>
                     <TableHeader>
