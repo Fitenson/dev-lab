@@ -1,7 +1,5 @@
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Head, router } from "@inertiajs/react";
-import { useForm } from "react-hook-form";
+import { SelectValue } from "@radix-ui/react-select";
 
 import breadcrumbItems from "@/components/breadcrumb-items";
 import AppLayout from "@/layouts/app-layout";
@@ -9,7 +7,7 @@ import UserLayout from "@/layouts/user/layout";
 
 import User from "@/pages/user/data/models/User";
 import UserForm from "@/pages/user/data/models/UserForm";
-import { UserModel, userSchema } from "./schema/userSchema";
+import { UserModel } from "./presentation/schema/userSchema";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -18,9 +16,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAppSelector } from "@/core/presentation/store/useAppSelector";
 import useShowToast from "@/hooks/use-show-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
-import { SelectValue } from "@radix-ui/react-select";
-import { Key } from "lucide-react";
-import useUserService from "./service/useUserService";
+import useUserService from "@/pages/user/domain/service/useUserService";
+import useUserForm from "./presentation/form/useUserForm";
 
 
 type Props = {
@@ -32,7 +29,8 @@ export default function UserFormView({ userData }: Props) {
     const user = new User(userData);
     const isLoading = useAppSelector(state => state.loading.global);
     const showToast = useShowToast();
-    const { updateUser } = useUserService();
+    const { userForm } = useUserForm({ user: user });
+    const { createUser, updateUser } = useUserService();
 
 
     const breadcrumbs = [
@@ -41,61 +39,44 @@ export default function UserFormView({ userData }: Props) {
     ];
 
 
-    const userForm = useForm<z.infer<typeof userSchema>>({
-        resolver: zodResolver(userSchema),
-        defaultValues: {
-            name: user.getName() || "",
-            full_name: user.getFullName() || "",
-            email: user.getEmail() || "",
-            description: user.getDescription() || "",
-            address: user.getAddress() || "",
-        }
-    });
-
-
-    const submit = (data: z.infer<typeof userSchema>) => {
+    const submit = async () => {
         const formValues = userForm.getValues();
         const formData = new FormData();
 
         Object.entries(formValues).forEach(([key, value]) => {
-            if(!isEmpty(value)) {
+            if(isEmpty(user.getId())) {
+                formData.append(`user[${key}]`, value);
+            } else if(!isEmpty(user.getId()) && !isEmpty(value)) {
                 formData.append(`user[${key}]`, value);
             }
-        });
+        })
 
+        try {
+            let response;
 
-        if(user && user?.id) {
-            formData.append("_method", "PATCH");
-            const data = updateUser(user.id, formData);
-            console.log(data);
-            // router.patch(`/user/update/${user.id}`, formData, {
-            //     forceFormData: true,
-            //     onSuccess: () => {
-            //         showToast('Success', 'User update successfully', 'success');
-            //     },
-            //     onError: () => {
-            //         showToast('Error', 'Error on update', 'error');
-            //     }
-            // });
-        } else {
-            router.post('/user/store', formData, {
-                onSuccess: () => {
-                    showToast('Success', 'Create user successfully', 'success');
-                },
-                onError: (errors) => {
+            if(!isEmpty(user.getId())) {
+                response = await updateUser(user.getId(), formData);
 
-                    Object.keys(errors).forEach((field) => {
-                        if(field in userForm.getValues()) {
-                            userForm.setError(field, {
-                                type: 'max',
-                                message: errors[field]
-                            });
-                        }
+                showToast('Success', 'Update user successfully', 'success');
+            } else {
+                response = await createUser(formData);
+                showToast('Success', 'Create user successfully', 'success');
+
+                router.visit(`/user/${response?.data?.id}`);
+            }
+        } catch(error) {
+            const errors = error;
+
+            Object.keys(errors).forEach((field) => {
+                if(field in userForm.getValues()) {
+                    userForm.setError(field, {
+                        type: 'max',
+                        message: errors[field]
                     });
-
-                    showToast('Error', 'Error on create', 'error');
                 }
             });
+
+            showToast('Error', 'Error on create', 'error');
         }
     }
 

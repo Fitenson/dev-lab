@@ -1,19 +1,19 @@
 
-import { UserModel } from "./schema/userSchema";
+import { UserModel } from "./presentation/schema/userSchema";
 import { Head } from "@inertiajs/react";
 import { useQuery } from "@tanstack/react-query";
 import { convertToDataTable } from "@/lib/utils";
 import AppLayout from "@/layouts/app-layout";
 import UserLayout from "@/layouts/user/layout";
 import HeadingSmall from "@/components/heading-small";
-import UserDataTable from "./components/user-data-table";
-import { columns } from "./components/columns";
+import UserDataTable from "@/pages/user/presentation/components/user-data-table";
+import { columns } from "@/pages/user/presentation/components/columns";
 import breadcrumbItems from "@/components/breadcrumb-items";
 import { useAppSelector } from "@/core/presentation/store/useAppSelector";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setIndexData } from "./redux/userDataTableSlice";
-import useUserService from "./service/useUserService";
+import { setIndexData } from "./presentation/redux/userDataTableSlice";
+import useUserService from "@/pages/user/domain/service/useUserService";
 
 
 export default function UserGridview() {

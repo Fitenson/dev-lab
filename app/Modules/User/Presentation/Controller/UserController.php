@@ -26,14 +26,14 @@ class UserController extends Controller {
 
 
     public function store(CreateUserRequest $create_user_request) {
-        $user = $this->user_service->store($create_user_request->validated());
+        $user = $this->user_service->store($create_user_request->all());
 
         return redirect()->route('user.show', $user->id);
     }
 
 
     public function update(string $id, UpdateUserRequest $update_user_request) {
-        $user = $this->user_service->update($id, $update_user_request->validated());
+        $user = $this->user_service->update($id, $update_user_request->all());
 
         return redirect()->route('user.show', $user->id);
     }

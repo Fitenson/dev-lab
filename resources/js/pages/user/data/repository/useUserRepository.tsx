@@ -1,24 +1,41 @@
 import { useRequest } from "@/lib/useRequest";
-import { UserDataTableState } from "../../redux/userDataTableSlice";
+import { UserDataTableState } from "../../presentation/redux/userDataTableSlice";
 
 
 const useUserRepository = () => {
     const { request } =  useRequest();
 
     const getIndex = async (params: UserDataTableState["params"]) => {
-        const response = await request.post("/user/index", params);
-        return response.data;
+        return await request({
+            url: "/user/index",
+            method: "POST",
+            data: params,
+        });
+    }
+
+
+    const store = async (formData: FormData) => {
+        return await request({
+            url: "/user/store",
+            method: "POST",
+            data: formData
+        });
     }
 
 
     const update = async (id: string, formData: FormData) => {
-        const response = await request.post(`/user/update/${id}`, formData);
-        return response.data;
+        formData.append("_method", "PUT");
+        return await request({
+            url: `/user/update/${id}`,
+            method: "POST",
+            data: formData
+        });
     }
 
 
     return {
         getIndex,
+        store,
         update
     };
 }

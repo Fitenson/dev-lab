@@ -11,13 +11,13 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { router } from "@inertiajs/react";
 import User from "@/pages/user/data/models/User";
-import { UserModel } from "./../schema/userSchema";
+import { UserModel } from "@/pages/user/presentation/schema/userSchema";
 import TopActionBar from "@/components/custom/top-action-bar";
 import { Input } from "@/components/ui/input";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/core/presentation/store/useAppSelector";
 import { RootState } from "@/core/presentation/store";
-import { setColumnVisibility, setRowSelection, setSorting } from "../redux/userDataTableSlice";
+import { setColumnVisibility, setRowSelection, setSorting } from "@/pages/user/presentation/redux/userDataTableSlice";
 
 
 interface DataTableProps<TData, TValue> {

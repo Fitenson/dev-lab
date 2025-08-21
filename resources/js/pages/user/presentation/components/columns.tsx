@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { UserModel } from "../schema/userSchema";
+import { UserModel } from "@/pages/user/presentation/schema/userSchema";
 import { createColumn } from "@/core/presentation/table/ColumnConfig";
 
 
