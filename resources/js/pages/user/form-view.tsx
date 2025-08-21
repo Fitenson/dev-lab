@@ -8,6 +8,7 @@ import AppLayout from "@/layouts/app-layout";
 import UserLayout from "@/layouts/user/layout";
 
 import User from "@/pages/user/data/models/User";
+import UserForm from "@/pages/user/data/models/UserForm";
 import { UserModel, userSchema } from "./schema/userSchema";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { FormMessage } from "@/components/ui/form";
@@ -18,6 +19,8 @@ import { useAppSelector } from "@/core/presentation/store/useAppSelector";
 import useShowToast from "@/hooks/use-show-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { SelectValue } from "@radix-ui/react-select";
+import { Key } from "lucide-react";
+import useUserService from "./service/useUserService";
 
 
 type Props = {
@@ -29,40 +32,53 @@ export default function UserFormView({ userData }: Props) {
     const user = new User(userData);
     const isLoading = useAppSelector(state => state.loading.global);
     const showToast = useShowToast();
+    const { updateUser } = useUserService();
 
 
     const breadcrumbs = [
         ...breadcrumbItems,
-        { title: user.name || "Create", href: '/' }
+        { title: user.getName() || "Create", href: '/' }
     ];
 
 
     const userForm = useForm<z.infer<typeof userSchema>>({
         resolver: zodResolver(userSchema),
         defaultValues: {
-            name: user.name || "",
-            full_name: user.full_name || "",
-            email: user.email || "",
-            description: user.description || "",
-            address: user.address || "",
+            name: user.getName() || "",
+            full_name: user.getFullName() || "",
+            email: user.getEmail() || "",
+            description: user.getDescription() || "",
+            address: user.getAddress() || "",
         }
     });
 
 
     const submit = (data: z.infer<typeof userSchema>) => {
-        // const data = userForm.getValues();
+        const formValues = userForm.getValues();
+        const formData = new FormData();
+
+        Object.entries(formValues).forEach(([key, value]) => {
+            if(!isEmpty(value)) {
+                formData.append(`user[${key}]`, value);
+            }
+        });
+
 
         if(user && user?.id) {
-            router.patch(`/user/update/${user.id}`, data, {
-                onSuccess: () => {
-                    showToast('Success', 'User update successfully', 'success');
-                },
-                onError: () => {
-                    showToast('Error', 'Error on update', 'error');
-                }
-            });
+            formData.append("_method", "PATCH");
+            const data = updateUser(user.id, formData);
+            console.log(data);
+            // router.patch(`/user/update/${user.id}`, formData, {
+            //     forceFormData: true,
+            //     onSuccess: () => {
+            //         showToast('Success', 'User update successfully', 'success');
+            //     },
+            //     onError: () => {
+            //         showToast('Error', 'Error on update', 'error');
+            //     }
+            // });
         } else {
-            router.post('/user/store', data, {
+            router.post('/user/store', formData, {
                 onSuccess: () => {
                     showToast('Success', 'Create user successfully', 'success');
                 },
@@ -100,7 +116,7 @@ export default function UserFormView({ userData }: Props) {
 
                         <FormField
                             control={userForm.control}
-                            name="name"
+                            name={UserForm.getName()}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Name</FormLabel>
@@ -117,7 +133,7 @@ export default function UserFormView({ userData }: Props) {
 
                         <FormField
                             control={userForm.control}
-                            name="full_name"
+                            name={UserForm.getFullName()}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Full Name</FormLabel>
@@ -134,7 +150,7 @@ export default function UserFormView({ userData }: Props) {
 
                         <FormField
                             control={userForm.control}
-                            name="email"
+                            name={UserForm.getEmail()}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
@@ -151,7 +167,7 @@ export default function UserFormView({ userData }: Props) {
 
                         <FormField
                             control={userForm.control}
-                            name="gender"
+                            name={UserForm.getGender()}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Gender</FormLabel>
@@ -176,7 +192,7 @@ export default function UserFormView({ userData }: Props) {
                         <div className="flex flex-row col-span-full w-full gap-6 items-start">
                         <FormField
                             control={userForm.control}
-                            name="description"
+                            name={UserForm.getDescription()}
                             render={({ field }) => (
                                 <FormItem className="flex-1">
                                     <FormLabel>Description</FormLabel>
@@ -194,7 +210,7 @@ export default function UserFormView({ userData }: Props) {
 
                         <FormField
                             control={userForm.control}
-                            name="address"
+                            name={UserForm.getAddress()}
                             render={({ field }) => (
                                 <FormItem className="flex-1">
                                     <FormLabel>Address</FormLabel>

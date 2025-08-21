@@ -14,4 +14,5 @@ Route::middleware('auth')->prefix('user')->group(function() {
     Route::post('/store', [UserController::class, 'store'])->name('user.store');
 
     Route::get('/{id}', [UserPageController::class, 'show'])->name('user.show');
+    Route::patch('/update/{id}', [UserController::class, 'update'])->name('user.update');
 });

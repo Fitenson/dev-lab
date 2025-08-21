@@ -1,4 +1,5 @@
 import '../css/app.css';
+import "./lib/global";
 
 import { createInertiaApp, router } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';

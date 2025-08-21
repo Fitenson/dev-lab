@@ -3,15 +3,21 @@ import { UserDataTableState } from "../redux/userDataTableSlice";
 
 
 const useUserService = () => {
-    const { getIndex } = useUserRepository();
+    const { getIndex, update } = useUserRepository();
 
     const getIndexUser = (params: UserDataTableState["params"]) => {
         return getIndex(params);
     }
 
 
+    const updateUser = async (id: string, formData: FormData) => {
+        return update(id, formData);
+    }
+
+
     return {
-        getIndexUser
+        getIndexUser,
+        updateUser
     };
 }
 

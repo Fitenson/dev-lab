@@ -1,5 +1,5 @@
 import BaseEntity from "@/core/domain/entity/BaseEntity";
-import { UserModel } from "./../schema/userSchema";
+import { UserModel } from "@/pages/user/schema/userSchema";
 
 
 export default class User extends BaseEntity<UserModel> implements UserModel {
@@ -22,7 +22,7 @@ export default class User extends BaseEntity<UserModel> implements UserModel {
     }
 
 
-    setName(name: string): void
+    setName(name: "name"): void
     {
         this.name = name;
     }
@@ -50,5 +50,36 @@ export default class User extends BaseEntity<UserModel> implements UserModel {
     setGender(gender: string): void
     {
         this.gender = gender;
+    }
+
+
+    getName(): string
+    {
+        return this.name;
+    }
+
+    getFullName(): string
+    {
+        return this.full_name;
+    }
+
+    getEmail(): string
+    {
+        return this.email;
+    }
+
+    getDescription(): string
+    {
+        return this.description;
+    }
+
+    getAddress(): string
+    {
+        return this.address;
+    }
+
+    getGender(): string
+    {
+        return this.gender;
     }
 }

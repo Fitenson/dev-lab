@@ -11,8 +11,15 @@ const useUserRepository = () => {
     }
 
 
+    const update = async (id: string, formData: FormData) => {
+        const response = await request.post(`/user/update/${id}`, formData);
+        return response.data;
+    }
+
+
     return {
-        getIndex
+        getIndex,
+        update
     };
 }
 
