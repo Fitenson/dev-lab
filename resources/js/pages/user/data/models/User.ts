@@ -59,36 +59,36 @@ export default class User extends BaseEntity<UserModel> implements UserModel {
 
     getId(): string
     {
-        return this.id;
+        return !isEmpty(this.id) ? this.id : "";
     }
 
     getName(): string
     {
-        return this.name;
+        return !isEmpty(this.name) ? this.name : "";
     }
 
     getFullName(): string
     {
-        return this.full_name;
+        return !isEmpty(this.full_name) ? this.full_name : "";
     }
 
     getEmail(): string
     {
-        return this.email;
+        return !isEmpty(this.email) ? this.email : "";
     }
 
     getDescription(): string
     {
-        return this.description;
+        return !isEmpty(this.description) ? this.description : "";
     }
 
     getAddress(): string
     {
-        return this.address;
+        return !isEmpty(this.address) ? this.address : "";
     }
 
     getGender(): string
     {
-        return this.gender;
+        return !isEmpty(this.gender) ? this.gender : "";
     }
 }

@@ -28,7 +28,9 @@ class UserController extends Controller {
     public function store(CreateUserRequest $create_user_request) {
         $user = $this->user_service->store($create_user_request->all());
 
-        return redirect()->route('user.show', $user->id);
+        return response()->json([
+            'userId' => $user->id
+        ]);
     }
 
 

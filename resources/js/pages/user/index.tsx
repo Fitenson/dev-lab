@@ -1,4 +1,3 @@
-
 import { UserModel } from "./presentation/schema/userSchema";
 import { Head } from "@inertiajs/react";
 import { useQuery } from "@tanstack/react-query";

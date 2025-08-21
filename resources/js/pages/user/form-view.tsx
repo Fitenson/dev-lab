@@ -6,7 +6,7 @@ import AppLayout from "@/layouts/app-layout";
 import UserLayout from "@/layouts/user/layout";
 
 import User from "@/pages/user/data/models/User";
-import UserForm from "@/pages/user/data/models/UserForm";
+import UserForm from "@/pages/user/presentation/form/UserForm";
 import { UserModel } from "./presentation/schema/userSchema";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { FormMessage } from "@/components/ui/form";
@@ -62,7 +62,8 @@ export default function UserFormView({ userData }: Props) {
                 response = await createUser(formData);
                 showToast('Success', 'Create user successfully', 'success');
 
-                router.visit(`/user/${response?.data?.id}`);
+                console.log(response);
+                router.visit(`/user/${response?.userId}`);
             }
         } catch(error) {
             const errors = error;

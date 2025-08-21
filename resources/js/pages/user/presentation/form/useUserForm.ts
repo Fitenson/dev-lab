@@ -14,11 +14,12 @@ const useUserForm = ({ user }: UseUserFormProps) => {
     const userForm = useForm<z.infer<typeof userSchema>>({
         resolver: zodResolver(userSchema),
         defaultValues: {
-            name: user.getName() || "",
-            full_name: user.getFullName() || "",
-            email: user.getEmail() || "",
-            description: user.getDescription() || "",
-            address: user.getAddress() || "",
+            name: user.getName(),
+            full_name: user.getFullName(),
+            email: user.getEmail(),
+            description: user.getDescription(),
+            address: user.getAddress(),
+            gender: user.getGender()
         }
     });
 
