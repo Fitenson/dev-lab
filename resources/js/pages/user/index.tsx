@@ -21,7 +21,7 @@ export default function UserGridview() {
     const { getIndexUser } = useUserService();
 
 
-    const { data } = useQuery({
+    const { data, refetch } = useQuery({
         queryKey: ["/user/index", params],
         queryFn: async () => {
             return getIndexUser(params);
@@ -49,9 +49,13 @@ export default function UserGridview() {
             <Head title="User" />
 
             <UserLayout>
-                <section className="w-full max-w-7xl mx-auto">
+                <section className="w-full mx-auto">
                     <HeadingSmall title="Users" />
-                    <UserDataTable<UserModel, unknown> data={users} columns={columns} />
+                    <UserDataTable<UserModel, unknown>
+                        data={users}
+                        columns={columns}
+                        onRefresh={refetch}
+                    />
                 </section>
             </UserLayout>
         </AppLayout>

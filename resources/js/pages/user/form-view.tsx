@@ -29,7 +29,7 @@ export default function UserFormView({ userData }: Props) {
     const user = new User(userData);
     const isLoading = useAppSelector(state => state.loading.global);
     const showToast = useShowToast();
-    const { userForm } = useUserForm({ user: user });
+    const { userForm, setUserFormError } = useUserForm({ user: user });
     const { createUser, updateUser } = useUserService();
 
 
@@ -66,18 +66,8 @@ export default function UserFormView({ userData }: Props) {
                 router.visit(`/user/${response?.userId}`);
             }
         } catch(error) {
-            const errors = error;
-
-            Object.keys(errors).forEach((field) => {
-                if(field in userForm.getValues()) {
-                    userForm.setError(field, {
-                        type: 'max',
-                        message: errors[field]
-                    });
-                }
-            });
-
-            showToast('Error', 'Error on create', 'error');
+            setUserFormError(error);
+            showToast("Error", "Error on create", "error");
         }
     }
 

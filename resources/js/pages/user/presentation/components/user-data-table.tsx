@@ -23,12 +23,14 @@ import { setColumnVisibility, setRowSelection, setSorting } from "@/pages/user/p
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    onRefresh?: () => void;
 }
 
 
 export default function UserDataTable<TData, TValue>({
     columns,
-    data
+    data,
+    onRefresh
 }: DataTableProps<TData, TValue>) {
     const dispatch = useDispatch();
     const { rowSelection, sorting, columnVisibility } = useAppSelector(
@@ -79,7 +81,7 @@ export default function UserDataTable<TData, TValue>({
                     <TopActionBar
                         createAction={{ to: "/user/create" }}
                         deleteAction={{ action: () => {} }}
-                        refreshAction={{ action: () => {} }}
+                        refreshAction={{ action: onRefresh }}
                         table={table}
                     />
                 </div>

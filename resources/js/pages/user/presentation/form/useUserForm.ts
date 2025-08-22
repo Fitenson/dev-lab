@@ -24,8 +24,27 @@ const useUserForm = ({ user }: UseUserFormProps) => {
     });
 
 
+    const setUserFormError = (error: unknown) => {
+        const errors = error?.response?.data?.errors ?? {};
+
+        if (Object.keys(errors).length > 0) {
+            Object.keys(errors).forEach((field) => {
+                // Remove "user." prefix if it exists
+                const normalizedField = field.replace(/^user\./, "");
+                if (normalizedField in userForm.getValues()) {
+                    userForm.setError(normalizedField, {
+                        type: "server",
+                        message: errors[field][0] ?? "Invalid value", // Take first error message
+                    });
+                }
+            });
+        }
+    }
+
+
     return {
         userForm,
+        setUserFormError
     };
 }
 

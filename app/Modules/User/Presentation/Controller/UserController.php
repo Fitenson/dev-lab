@@ -26,7 +26,10 @@ class UserController extends Controller {
 
 
     public function store(CreateUserRequest $create_user_request) {
-        $user = $this->user_service->store($create_user_request->all());
+        echo '<pre>';
+        print_r($create_user_request->validated());
+        die;
+        $user = $this->user_service->store($create_user_request->validated());
 
         return response()->json([
             'userId' => $user->id
