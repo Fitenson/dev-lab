@@ -9,6 +9,7 @@ interface UseUserFormProps {
     user: User
 }
 
+export type UserFormValues = z.infer<typeof userSchema>;
 
 const useUserForm = ({ user }: UseUserFormProps) => {
     const userForm = useForm<z.infer<typeof userSchema>>({

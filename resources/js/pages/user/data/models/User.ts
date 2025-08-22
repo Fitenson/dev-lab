@@ -27,7 +27,7 @@ export default class User extends BaseEntity<UserModel> implements UserModel {
         this.id = id;
     }
 
-    setName(name: "name"): void
+    setName(name: string): void
     {
         this.name = name;
     }

@@ -41,25 +41,16 @@ export default function UserFormView({ userData }: Props) {
 
     const submit = async () => {
         const formValues = userForm.getValues();
-        const formData = new FormData();
-
-        Object.entries(formValues).forEach(([key, value]) => {
-            if(isEmpty(user.getId())) {
-                formData.append(`user[${key}]`, value);
-            } else if(!isEmpty(user.getId()) && !isEmpty(value)) {
-                formData.append(`user[${key}]`, value);
-            }
-        })
 
         try {
             let response;
 
             if(!isEmpty(user.getId())) {
-                response = await updateUser(user.getId(), formData);
+                response = await updateUser({ user: user, formValues: formValues });
 
                 showToast('Success', 'Update user successfully', 'success');
             } else {
-                response = await createUser(formData);
+                response = await createUser({ formValues: formValues });
                 showToast('Success', 'Create user successfully', 'success');
 
                 console.log(response);

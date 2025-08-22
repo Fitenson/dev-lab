@@ -1,7 +1,6 @@
 import { useRequest } from "@/lib/useRequest";
 import { UserDataTableState } from "../../presentation/redux/userDataTableSlice";
 import User from "../models/User";
-import { UserModel } from "../../presentation/schema/userSchema";
 
 
 const useUserRepository = () => {
@@ -16,7 +15,16 @@ const useUserRepository = () => {
     }
 
 
-    const store = async (formData: FormData) => {
+    const store = async (user: User) => {
+        const formData = new FormData();
+
+        formData.append("user[name]", user.getName());
+        formData.append("user[full_name]", user.getFullName());
+        formData.append("user[email]", user.getEmail());
+        formData.append("user[description]", user.getDescription());
+        formData.append("user[address]", user.getAddress());
+        formData.append("user[gender]", user.getGender());
+
         return await request({
             url: "/user/store",
             method: "POST",
@@ -25,18 +33,26 @@ const useUserRepository = () => {
     }
 
 
-    const update = async (id: string, formData: FormData) => {
+    const update = async (user: User) => {
+        const formData = new FormData();
+
         formData.append("_method", "PUT");
+        formData.append("user[name]", user.getName());
+        formData.append("user[full_name]", user.getFullName());
+        formData.append("user[email]", user.getEmail());
+        formData.append("user[description]", user.getDescription());
+        formData.append("user[address]", user.getAddress());
+        formData.append("user[gender]", user.getGender());
 
         return await request({
-            url: `/user/update/${id}`,
+            url: `/user/update/${user.getId()}`,
             method: "POST",
             data: formData
         });
     }
 
 
-    const remove = async (values: UserModel[]) => {
+    const remove = async (values: User[]) => {
         const formData = new FormData();
 
         values.forEach((user, index) => {
