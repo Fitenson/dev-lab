@@ -26,9 +26,6 @@ class UserController extends Controller {
 
 
     public function store(CreateUserRequest $create_user_request) {
-        echo '<pre>';
-        print_r($create_user_request->validated());
-        die;
         $user = $this->user_service->store($create_user_request->validated());
 
         return response()->json([
@@ -41,5 +38,10 @@ class UserController extends Controller {
         $user = $this->user_service->update($id, $update_user_request->all());
 
         return redirect()->route('user.show', $user->id);
+    }
+
+
+    public function delete(Request $request) {
+        return $this->user_service->removeUser($request->all());
     }
 }

@@ -15,4 +15,6 @@ Route::middleware('auth')->prefix('user')->group(function() {
 
     Route::get('/{id}', [UserPageController::class, 'show'])->name('user.show');
     Route::put('/update/{id}', [UserController::class, 'update'])->name('user.update');
+
+    Route::delete('/delete', [UserController::class, 'delete'])->name('user.delete');
 });

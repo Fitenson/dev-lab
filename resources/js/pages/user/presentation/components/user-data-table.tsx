@@ -18,24 +18,43 @@ import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/core/presentation/store/useAppSelector";
 import { RootState } from "@/core/presentation/store";
 import { setColumnVisibility, setRowSelection, setSorting } from "@/pages/user/presentation/redux/userDataTableSlice";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import useUserService from "../../domain/service/useUserService";
+import useShowToast from "@/hooks/use-show-toast";
 
 
-interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
+interface DataTableProps<TData extends User> {
+    columns: ColumnDef<TData>[]
     data: TData[]
     onRefresh?: () => void;
 }
 
 
-export default function UserDataTable<TData, TValue>({
+export default function UserDataTable<TData extends User>({
     columns,
     data,
     onRefresh
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData>) {
     const dispatch = useDispatch();
     const { rowSelection, sorting, columnVisibility } = useAppSelector(
         (state: RootState) => state.userDataTable
     );
+    const showToast = useShowToast();
+
+    const queryClient = useQueryClient();
+    const { params } = useAppSelector(state => state.userDataTable);
+    const { removeUser } = useUserService();
+
+    const mutation = useMutation({
+        mutationFn: (selectedRows: User[]) => removeUser(selectedRows),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["/user/index", params]});
+        },
+        onError: (error) => {
+            console.log(error);
+            showToast("Error", "Failed to delete user", "error");
+        }
+    });
 
 
     const table = useReactTable({
@@ -74,13 +93,19 @@ export default function UserDataTable<TData, TValue>({
     };
 
 
+    const handleRemove = () => {
+        const selectedRows = table.getSelectedRowModel() .rows.map(row => new User(row.original as UserModel));
+        mutation.mutate(selectedRows);
+    }
+
+
     return (
         <main className="w-full">
             <div className="overflow-hidden rounded-md border">
                 <div className="w-full">
                     <TopActionBar
                         createAction={{ to: "/user/create" }}
-                        deleteAction={{ action: () => {} }}
+                        deleteAction={{ action: handleRemove }}
                         refreshAction={{ action: onRefresh }}
                         table={table}
                     />
@@ -116,10 +141,11 @@ export default function UserDataTable<TData, TValue>({
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
-                                      className={`cursor-pointer ${
-                                            row.getIsSelected() ? "bg-purple-600 text-white" : ""
-                                        }`}
                                     key = {row.id}
+                                    className={`cursor-pointer ${
+                                        row.getIsSelected() ? "bg-purple-600 text-white" : ""
+                                    }`}
+                                    onClick={() => row.toggleSelected()}
                                     onDoubleClick = {() => onSelectRow(row)}
                                     data-state = {row.getIsSelected() && "selected"}
                                 >

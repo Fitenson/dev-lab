@@ -45,6 +45,15 @@ class EloquentUserRepository extends BaseRepository implements UserRepository {
 
     public function delete(array $data)
     {
+        // Assume $data['UUIDs'] is an array of selected UUIDs
+        $uuids = $data['UUIDs'] ?? [];
 
+        $remove = [];
+
+        if (!empty($uuids)) {
+            $remove = User::whereIn('id', $uuids)->delete();
+        }
+
+        return $remove;
     }
 }
